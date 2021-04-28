@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Venn Diagram</title>
+<style>
+body {
+font-size : 10px;
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="container">
+   <h1>Relationships Between Groups </h1>
+<div id="venn_1">    
+        <h3>Patterns of Life Group Vs Car Types </h3> 
+<button onclick="update(data1)">Day Campers</button>
+<button onclick="update(data2)">Multiday Campers</button>
+<button onclick="update(data3)">Overnight Campers</button>
+<button onclick="update(data4)">Passing Through</button>
+</div> 
+
+<div id="venn_1">    
+        <h3>Patterns of Life Group Vs Anomaly Groups  </h3> 
+<button onclick="update(data5)">Anomalies</button>
+
+</div> 
+
+ 
+<div id="venn_diagram"></div>
+
+
+</body>
+
+<style>
+
+.venntooltip {
+  position: absolute;
+  text-align: center;
+  width: 128px;
+  height: 16px;
+  background: #333;
+  color: #ddd;
+  padding: 2px;
+  border: 0px;
+  border-radius: 8px;
+  opacity: 0;
+}
+
+</style>
+
+
+<script type="text/javascript" src="d3/d3.v3.min.js"></script>
+<script type="text/javascript" src="venn/venn.js"></script>
+
+
+
+
+<script>
+
+
+
+var data1 = [
+            {sets: [0], figure: 7487, label:"Type 1", size: 7487},
+            {sets: [1], figure: 4717, label:"Type 2", size: 4717},
+            {sets: [2],figure: 998, label:"Type 2P", size: 998},
+            {sets:[3], figure: 3039,label: "Type 3", size: 3039},
+            {sets: [4], figure: 1244, label: "Type 4", size: 1244},
+            {sets:[5], figure: 817, label: "Type 5", size: 817},
+            {sets:[6], figure: 406, label: "Type 6", size: 406},
+	    {sets: [7], figure:7882, label:"Day Campers", size: 7882},
+            {sets: [0,7], figure: 3159, size: 3159},
+            {sets: [1,7], figure: 1897, size: 1897 },
+            {sets: [2,7], figure: 0, size: 0},
+	    {sets: [3,7], figure: 1319, size: 1319},
+	    {sets: [4,7], figure: 757, size: 757},
+	    {sets: [5,7], figure: 496, size: 496},
+	    {sets: [6,7], figure: 254, size: 254}
+    ];
+
+
+
+
+var data2 = [
+	    {sets: [0], figure: 7487,label:"Type 1", size: 7487},
+            {sets: [1], figure: 4717, label:"Type 2", size: 4717},
+            {sets: [2], figure: 998, label:"Type 2P", size: 998},
+            {sets:[3], figure: 3039, label: "Type 3", size: 3039},
+            {sets: [4], figure: 1244, label: "Type 4", size: 1244},
+            {sets:[5], figure: 817, label: "Type 5", size: 817},
+            {sets:[6], figure: 406, label: "Type 6", size: 406},
+            {sets: [8], figure: 4650,label:"Multiday Campers", size: 4650},
+            {sets: [0,8], figure: 2349, size: 2349},
+	    {sets: [1,8], figure: 1439, size: 1439},
+	    {sets: [2,8], figure: 0, size: 0},
+	    {sets: [3,8], figure: 862, size: 862},
+	    {sets: [4,8], figure: 0, size: 0},
+	    {sets: [5,8], figure: 0, size: 0},
+	    {sets: [6,8], figure: 0, size: 0}
+	   ];
+
+var data3 = [
+            {sets: [0], figure: 7487, label:"Type 1", size: 7487},
+            {sets: [1], figure: 4717, label:"Type 2", size: 4717},
+            {sets: [2], figure: 998, label:"Type 2P", size: 998},
+            {sets:[3], figure: 3039, label: "Type 3", size: 3039},
+            {sets: [4], figure: 1244, label: "Type 4", size: 1244},
+            {sets:[5], figure: 817, label: "Type 5", size: 817},
+            {sets:[6], figure: 406, label: "Type 6", size: 406},
+	    {sets: [9], figure: 2027, label:"Overnight Campers", size: 2027*2.3},
+            {sets: [0,9], figure: 991,size: 991},
+	    {sets: [1,9], figure: 602, size:602},
+	    {sets: [2,9], figure: 0, size: 0},
+	    {sets: [3,9], figure: 388, size: 388},
+ 	    {sets: [4,9], figure: 13, size: 13},
+	    {sets: [5,9], figure: 22, size: 22},
+	    {sets: [6,9], figure: 11,size: 11},
+    ];
+
+var data4 = [
+	    {sets: [0], figure: 7487, label:"Type 1", size: 7487},
+            {sets: [1], figure: 4717, label:"Type 2", size: 4717},
+            {sets: [2], figure: 998, label:"Type 2P", size: 998},
+            {sets:[3], figure: 3039, label: "Type 3", size: 3039},
+            {sets: [4], figure: 1244, label: "Type 4", size: 1244},
+            {sets:[5], figure: 817, label: "Type 5", size: 817},
+            {sets:[6], figure: 406, label: "Type 6", size: 406},
+            {sets:[10], figure: 3123, label: "Cars Passing Through", size: 3123*1.5},
+            {sets: [0,10], figure: 971,size: 971},
+            {sets: [1,10],figure: 771, size: 771},
+	    {sets: [2,10], figure: 0, size: 0},
+	    {sets: [3,10], figure: 463, size: 463},
+	    {sets: [4,10], figure: 479, size: 479},
+	    {sets: [5,10], figure: 299, size: 299},
+	    {sets: [6,10], figure: 140, size: 140}
+	   ];
+
+var data5 = [
+            {sets: [0], figure: 4650, label:"Day Campers", size: 4650},
+            {sets: [1], figure: 2027, label:"Multiday Campers", size: 2027*2},
+            {sets: [2], figure: 7882, label:"Overnight Campers", size: 7882},
+            {sets:[3],  figure: 3122, label: "Cars Passing Through", size: 3122},
+            {sets: [4], figure: 29, label: "Trespassers", size: 29*20},
+            {sets:[5], figure: 11, label: "Frequent Travellers", size: 11*20},
+            {sets:[6], figure: 2,  label: "Speeders", size: 2*20},
+            {sets:[7], figure: 1, label: "Overstayed", size: 1*20},
+            {sets: [0,4], figure: 29,  size: 29*20},
+            {sets: [0,5], figure: 7, size: 7*20},
+            {sets: [1,5], figure: 5,  size: 5*20},
+            {sets: [1,7], figure: 1,  size: 1*20},
+            {sets: [3,5], figure: 6, size: 6*20},
+            {sets: [3,6], figure: 2, size: 2*20}
+    ];
+
+
+var chart = venn.VennDiagram().width(500).height(400);
+
+
+// add a tooltip
+var tooltip = d3.select("#venn_diagram").append("div")
+    .attr("class", "venntooltip");
+
+
+
+function update(data) {
+var div = d3.select("#venn_diagram").datum(data).call(chart);
+
+var colors = ["#f28e2c","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#628a7e","#4e79a7","#9c755f","#bab0ab","#2b4561"];
+div.selectAll("text").style("fill", "white");
+div.selectAll(".venn-circle path").style("fill-opacity", .9).style("fill", function(d,i) { return colors[i]; });
+
+//intersection
+div.selectAll("path")
+    .style("stroke-opacity", 0)
+    .style("stroke", "#fff")
+    .style("stroke-width", 3)
+
+
+// add listeners to all the groups to display tooltip on mouseover
+div.selectAll("g")
+    .on("mouseover", function(d, i) {
+        // sort all the areas relative to the current item
+        venn.sortAreas(div, d);
+
+        // Display a tooltip with the current size
+        tooltip.transition().duration(400).style("opacity", .9);
+        tooltip.text(d.figure+ " cars");
+        
+        // highlight the current path
+        var selection = d3.select(this).transition("tooltip").duration(400);
+        selection.select("path")
+            .style("stroke-width", 3)
+            .style("fill-opacity", d.sets.length == 1 ? .8 : .1)
+            .style("stroke-opacity", 1);
+    })
+
+    .on("mousemove", function() {
+        tooltip.style("left", (d3.event.pageX) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");
+    })
+    
+    .on("mouseout", function(d, i) {
+        tooltip.transition().duration(400).style("opacity", 0);
+        var selection = d3.select(this).transition("tooltip").duration(400);
+        selection.select("path")
+            .style("stroke-width", 0)
+            .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
+            .style("stroke-opacity", 0);
+    });
+
+}
+
+
+
+
+
+</script>
+</html>

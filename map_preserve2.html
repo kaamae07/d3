@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preserve Map</title>
+<style>
+body {
+font-size : 12px;
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+
+.links {
+  //stroke: #000000;
+opacity: .60;
+}
+
+.nodes text {
+stroke:#333;
+cursos:pointer;
+}
+
+.nodes circle{
+stroke:#1c1c1c;
+stroke-width:1px;
+}
+
+.edgelabels {
+  position: absolute;
+  text-align: center;
+  width: 128px;
+  height: 16px;
+  background: #333;
+  color: #ddd;
+  padding: 2px;
+  border: 0px;
+  border-radius: 8px;
+  opacity: 0;
+}
+
+
+
+</style>
+</head>
+
+
+
+
+<body>
+
+<div id="container">
+   <h1>Preserve Map Network Graph</h1>
+ 
+<script src="d3/d3.v3.min.js"></script> 
+
+
+
+
+<script>
+
+var w = 650;
+var h = 650;
+var padding = 30;
+
+
+/*
+var colorScale = d3.scaleSequential()
+    .interpolator(d3.interpolate("purple", "orange"))
+    .domain([0,99]);
+*/
+
+ var c10 = d3.scale.category20c();
+ var c20 = d3.scale.category20();
+ var svg = d3.select("body")
+   .append("svg")
+   .attr("width", w)
+   .attr("height", h);
+
+
+
+// Import Background
+			var map = svg.selectAll("image").data([0]);
+						map.enter()
+						.append("svg:image")
+						.attr("xlink:href", "preserve3.jpg")
+						.attr("x", padding)
+						.attr("y", padding)
+						.attr("width", w-padding*3)
+						.attr("height", w-padding*3);
+			/*
+			//Set of scales to be used
+			var Xscale = d3.scale.linear()
+						.domain([0, 200])
+						.range([padding, w-padding*2]);
+			var Yscale = d3.scale.linear()
+						.domain([0, 200])
+						.range([h-padding*2,padding]);
+			
+			var x_axis = d3.svg.axis()
+						.scale(Xscale)
+						.orient("bottom");
+			var y_axis = d3.svg.axis()
+						.scale(Yscale)
+						.orient("left");
+			svg.append("g")
+				.attr("class","axis")
+				.attr("transform","translate(0," + (h-padding *2) + ")")
+				.call(x_axis)
+			svg.append("g")
+				.attr("class","axis")
+				.attr("transform", "translate(" + padding + ",0)")
+				.call(y_axis);
+				*/
+
+
+
+var x_range=((w-(padding*3))/200);
+
+var y_prop = ((h-(padding*3))/200);
+var y_range = (h-(padding*3));
+
+//x-adjustment is [((w-(padding*2))/200)*x_value]+padding
+//y-adjustment  is {(h-(padding*2))-[((h-(padding*2))/200)*y_value]}+padding
+//nodeName:"camping0",group:0,x:(540/200)*52.81+30,y:30+(540-((540/200)*158.04))
+//origin (0,0) is (30,540)
+
+
+		
+var data = 
+  {
+  nodes:[{nodeName:"test",group:-0,x:-10,y:-10},
+    {nodeName:"camping0",group:0,x:(x_range*52.81)+padding, y:padding+(y_range-(y_prop*158.04))},
+{nodeName:"camping1",group:0,x: (x_range*128.94)+padding, y: padding+(y_range-(y_prop*149.5))},
+{nodeName:"camping2",group:0,x: x_range*44.89+padding , y: padding+(y_range-(y_prop*135.19))},
+{nodeName:"camping3",group:0,x: x_range*45.77+padding , y: padding+(y_range-(y_prop*131.81))},
+{nodeName:"camping4",group:0,x: x_range*48.87+padding , y: padding+(y_range-(y_prop*110.72))},
+{nodeName:"camping5",group:0,x: x_range*20.87+padding , y: padding+(y_range-(y_prop*78.86))},
+{nodeName:"camping6",group:0,x: x_range*149.72+padding , y: padding+(y_range-(y_prop*23.16))},
+{nodeName:"camping7",group:0,x: x_range*180.7+padding , y: padding+(y_range-(y_prop*55.1))},
+{nodeName:"camping8",group:0,x: x_range*182.66+padding , y: padding+(y_range-(y_prop*151.1))},
+{nodeName:"entrance0",group:1,x: x_range*62.73+padding , y: padding+(y_range-(y_prop*185.9))},
+{nodeName:"entrance1",group:1,x: x_range*18.2+padding , y: padding+(y_range-(y_prop*132.29))},
+{nodeName:"entrance2",group:1,x: x_range*182.54+padding , y: padding+(y_range-(y_prop*112.54))},
+{nodeName:"entrance3",group:1,x: x_range*114.8+padding , y: padding+(y_range-(y_prop*33.72))},
+{nodeName:"entrance4",group:1,x: x_range*140+padding , y: padding+(y_range-(y_prop*16.5))},
+{nodeName:"gate0",group:2,x: x_range*63.57+padding , y: padding+(y_range-(y_prop*166.18))},
+{nodeName:"gate1",group:2,x: x_range*58.67+padding , y: padding+(y_range-(y_prop*155.13))},
+{nodeName:"gate2",group:2,x: x_range*24.88+padding , y: padding+(y_range-(y_prop*145.59))},
+{nodeName:"gate3",group:2,x: x_range*148.94+padding , y: padding+(y_range-(y_prop*139.44))},
+{nodeName:"gate4",group:2,x: x_range*164.04+padding , y: padding+(y_range-(y_prop*85.96))},
+{nodeName:"gate5",group:2,x: x_range*131+padding , y: padding+(y_range-(y_prop*54.08))},
+{nodeName:"gate6",group:2,x: x_range*116.16+padding, y: padding+(y_range-(y_prop*49.28))},
+{nodeName:"gate7",group:2,x: x_range*97.2+padding , y: padding+(y_range-(y_prop*40.48))},
+{nodeName:"gate8",group:2,x: x_range*138.08+padding, y: padding+(y_range-(y_prop*19.68))},
+{nodeName:"general-gate0",group:3,x: x_range*110.47+padding , y: padding+(y_range-(y_prop*189.87))},
+{nodeName:"general-gate1",group:3,x: x_range*64.74+padding, y: padding+(y_range-(y_prop*174.21))},
+{nodeName:"general-gate2",group:3,x: x_range*104.38+padding, y: padding+(y_range-(y_prop*167.33))},
+{nodeName:"general-gate3",group:3,x: x_range*185.66+padding, y: padding+(y_range-(y_prop*144.02))},
+{nodeName:"general-gate4",group:3,x: x_range*69.56+padding, y: padding+(y_range-(y_prop*101.93))},
+{nodeName:"general-gate5",group:3,x: x_range*124.27+padding, y: padding+(y_range-(y_prop*88.72))},
+{nodeName:"general-gate6",group:3,x: x_range*135.92+padding, y: padding+(y_range-(y_prop*62.76))},
+{nodeName:"general-gate7",group:3,x: x_range*65.6+padding, y: padding+(y_range-(y_prop*56))},
+{nodeName:"ranger-base",group:4,x: x_range*127.88+padding, y: padding+(y_range-(y_prop*25.32))},
+{nodeName:"ranger-stop0",group:5,x: x_range*89.62+padding, y: padding+(y_range-(y_prop*182.97))},
+{nodeName:"ranger-stop1",group:5,x: x_range*20.05+padding, y: padding+(y_range-(y_prop*175.03))},
+{nodeName:"ranger-stop2",group:5,x: x_range*80.36+padding, y: padding+(y_range-(y_prop*164.06))},
+{nodeName:"ranger-stop3",group:5,x: x_range*147.99+padding, y: padding+(y_range-(y_prop*154.55))},
+{nodeName:"ranger-stop4",group:5,x: x_range*18.81+padding, y: padding+(y_range-(y_prop*104.57))},
+{nodeName:"ranger-stop5",group:5,x: x_range*150.71+padding, y: padding+(y_range-(y_prop*81.77))},
+{nodeName:"ranger-stop6",group:5,x: x_range*131+padding, y: padding+(y_range-(y_prop*54.08))},
+{nodeName:"ranger-stop7",group:5,x: x_range*100.2+padding, y: padding+(y_range-(y_prop*48.52))}
+  ],
+  links:[
+    {source:1,	target:3,	value:1},
+{source:1,	target:4,	value:2},
+{source:1,	target:5,	value:1},
+{source:1,	target:11,	value:98},
+{source:1,	target:16,	value:27},
+{source:1,	target:17,	value:2},
+{source:1,	target:31,	value:653},
+{source:2,	target:9,	value:3},
+{source:2,	target:12,	value:20},
+{source:2,	target:24,	value:113},
+{source:2,	target:29,	value:34},
+{source:3,	target:1,	value:1},
+{source:3,	target:4,	value:2},
+{source:3,	target:5,	value:1},
+{source:3,	target:11,	value:121},
+{source:3,	target:16,	value:2},
+{source:3,	target:17,	value:2},
+{source:3,	target:31,	value:1005},
+{source:4,	target:1,	value:1},
+{source:4,	target:5,	value:1},
+{source:4,	target:11,	value:126},
+{source:4,	target:16,	value:5},
+{source:4,	target:17,	value:4},
+{source:4,	target:31,	value:1094},
+{source:5,	target:1,	value:1},
+{source:5,	target:3,	value:4},
+{source:5,	target:11,	value:136},
+{source:5,	target:16,	value:10},
+{source:5,	target:17,	value:2},
+{source:5,	target:31,	value:1230},
+{source:6,	target:31,	value:1586},
+{source:7,	target:12,	value:246},
+{source:7,	target:14,	value:238},
+{source:7,	target:19,	value:2},
+{source:7,	target:20,	value:9},
+{source:7,	target:23,	value:8},
+{source:7,	target:29,	value:713},
+{source:7,	target:30,	value:1},
+{source:8,	target:30,	value:1079},
+{source:9,	target:2,	value:1},
+{source:9,	target:18,	value:136},
+{source:9,	target:26,	value:928},
+{source:9,	target:27,	value:457},
+{source:9,	target:29,	value:283},
+{source:10,	target:13,	value:363},
+{source:10,	target:25,	value:1530},
+{source:10,	target:28,	value:1646},
+{source:11,	target:1,	value:137},
+{source:11,	target:3,	value:218},
+{source:11,	target:4,	value:212},
+{source:11,	target:5,	value:257},
+{source:11,	target:11,	value:2},
+{source:11,	target:31,	value:2647},
+{source:11,	target:33,	value:6},
+{source:12,	target:2,	value:35},
+{source:12,	target:7,	value:219},
+{source:12,	target:9,	value:11},
+{source:12,	target:14,	value:416},
+{source:12,	target:26,	value:2457},
+{source:12,	target:27,	value:266},
+{source:12,	target:30,	value:218},
+{source:13,	target:10,	value:387},
+{source:13,	target:21,	value:23},
+{source:13,	target:25,	value:1589},
+{source:13,	target:28,	value:1},
+{source:13,	target:31,	value:1593},
+{source:14,	target:7,	value:231},
+{source:14,	target:12,	value:415},
+{source:14,	target:29,	value:2652},
+{source:14,	target:30,	value:212},
+{source:15,	target:1,	value:1},
+{source:15,	target:16,	value:58},
+{source:15,	target:21,	value:17},
+{source:15,	target:25,	value:30},
+{source:15,	target:28,	value:2},
+{source:16,	target:1,	value:26},
+{source:16,	target:3,	value:5},
+{source:16,	target:4,	value:9},
+{source:16,	target:5,	value:5},
+{source:16,	target:15,	value:49},
+{source:16,	target:17,	value:14},
+{source:17,	target:1,	value:1},
+{source:17,	target:3,	value:2},
+{source:17,	target:5,	value:3},
+{source:17,	target:16,	value:6},
+{source:17,	target:31,	value:208},
+{source:17,	target:33,	value:220},
+{source:18,	target:9,	value:237},
+{source:18,	target:26,	value:15},
+{source:18,	target:29,	value:365},
+{source:18,	target:35,	value:617},
+{source:19,	target:9,	value:2},
+{source:19,	target:20,	value:260},
+{source:19,	target:23,	value:27},
+{source:19,	target:27,	value:136},
+{source:19,	target:29,	value:13},
+{source:19,	target:30,	value:3},
+{source:19,	target:37,	value:441},
+{source:20,	target:7,	value:8},
+{source:20,	target:19,	value:157},
+{source:20,	target:21,	value:2},
+{source:20,	target:23,	value:385},
+{source:20,	target:29,	value:201},
+{source:20,	target:30,	value:13},
+{source:20,	target:38,	value:839},
+{source:21,	target:13,	value:23},
+{source:21,	target:15,	value:19},
+{source:21,	target:20,	value:18},
+{source:21,	target:22,	value:235},
+{source:21,	target:25,	value:4},
+{source:21,	target:31,	value:282},
+{source:21,	target:38,	value:560},
+{source:22,	target:21,	value:228},
+{source:22,	target:28,	value:78},
+{source:22,	target:31,	value:9},
+{source:22,	target:39,	value:327},
+{source:23,	target:7,	value:11},
+{source:23,	target:19,	value:23},
+{source:23,	target:20,	value:324},
+{source:23,	target:29,	value:568},
+{source:23,	target:30,	value:13},
+{source:23,	target:40,	value:939},
+{source:24,	target:2,	value:103},
+{source:24,	target:26,	value:113},
+{source:25,	target:10,	value:1353},
+{source:25,	target:13,	value:2100},
+{source:25,	target:15,	value:40},
+{source:25,	target:21,	value:2},
+{source:25,	target:25,	value:1},
+{source:25,	target:28,	value:3933},
+{source:25,	target:34,	value:7248},
+{source:26,	target:9,	value:832},
+{source:26,	target:12,	value:2388},
+{source:26,	target:18,	value:17},
+{source:26,	target:24,	value:103},
+{source:26,	target:29,	value:3971},
+{source:26,	target:32,	value:7490},
+{source:27,	target:9,	value:412},
+{source:27,	target:12,	value:208},
+{source:27,	target:18,	value:2},
+{source:27,	target:19,	value:236},
+{source:27,	target:26,	value:1},
+{source:28,	target:10,	value:1295},
+{source:28,	target:13,	value:1},
+{source:28,	target:22,	value:72},
+{source:28,	target:25,	value:4096},
+{source:28,	target:28,	value:1},
+{source:28,	target:31,	value:5508},
+{source:29,	target:2,	value:31},
+{source:29,	target:7,	value:754},
+{source:29,	target:9,	value:309},
+{source:29,	target:12,	value:2},
+{source:29,	target:14,	value:2594},
+{source:29,	target:18,	value:462},
+{source:29,	target:19,	value:10},
+{source:29,	target:20,	value:190},
+{source:29,	target:23,	value:482},
+{source:29,	target:26,	value:3976},
+{source:29,	target:30,	value:623},
+{source:30,	target:8,	value:1081},
+{source:30,	target:12,	value:230},
+{source:30,	target:14,	value:195},
+{source:30,	target:19,	value:6},
+{source:30,	target:20,	value:15},
+{source:30,	target:23,	value:9},
+{source:30,	target:29,	value:626},
+{source:31,	target:1,	value:622},
+{source:31,	target:3,	value:910},
+{source:31,	target:4,	value:1008},
+{source:31,	target:5,	value:1119},
+{source:31,	target:6,	value:1588},
+{source:31,	target:11,	value:2299},
+{source:31,	target:13,	value:2447},
+{source:31,	target:17,	value:196},
+{source:31,	target:21,	value:300},
+{source:31,	target:22,	value:12},
+{source:31,	target:28,	value:5312},
+{source:31,	target:31,	value:1},
+{source:31,	target:36,	value:304},
+{source:40,	target:23,	value:939},
+{source:32,	target:26,	value:7311},
+{source:32,	target:32,	value:300},
+{source:32,	target:34,	value:7463},
+{source:33,	target:11,	value:6},
+{source:33,	target:17,	value:220},
+{source:33,	target:33,	value:233},
+{source:34,	target:25,	value:7427},
+{source:34,	target:32,	value:7284},
+{source:34,	target:34,	value:304},
+{source:35,	target:18,	value:617},
+{source:35,	target:35,	value:618},
+{source:36,	target:6,	value:2},
+{source:36,	target:31,	value:302},
+{source:36,	target:36,	value:306},
+{source:37,	target:19,	value:441},
+{source:37,	target:37,	value:441},
+{source:38,	target:7,	value:1},
+{source:38,	target:19,	value:7},
+{source:38,	target:20,	value:789},
+{source:38,	target:21,	value:564},
+{source:38,	target:22,	value:2},
+{source:38,	target:23,	value:28},
+{source:38,	target:29,	value:7},
+{source:38,	target:31,	value:1},
+{source:38,	target:38,	value:403}
+  ]
+};
+
+
+
+ var drag = d3.behavior.drag()
+   .on("drag", function(d, i) {
+     d.x += d3.event.dx
+     d.y += d3.event.dy
+     d3.select(this).attr("cx", d.x).attr("cy", d.y);
+     links.each(function(l, li) {
+       if (l.source == i) {
+         d3.select(this).attr("x1", d.x).attr("y1", d.y);
+       } else if (l.target == i) {
+         d3.select(this).attr("x2", d.x).attr("y2", d.y);
+       }
+     });
+   });
+
+
+
+
+
+var colors = ["#4e79a7","#f28e2c","#59a14f","#edc949","#4e79a7","#f28e2c","#59a14f","#edc949"];
+
+
+
+
+var links = svg.selectAll("links")
+   .data(data.links)
+   .enter().append("line")
+  .attr("class", "links")
+   .attr("x1", function(l) {
+     var sourceNode = data.nodes.filter(function(d, i) {
+       return i == l.source
+     })[0];
+     d3.select(this).attr("y1", sourceNode.y);
+     return sourceNode.x
+   })
+   .attr("x2", function(l) {
+     var targetNode = data.nodes.filter(function(d, i) {
+       return i == l.target
+     })[0];
+     d3.select(this).attr("y2", targetNode.y);
+     return targetNode.x
+   })
+   .attr("fill", "none")
+   .attr("stroke", "#5b7485")
+   .attr("stroke-width", function(d) { return Math.sqrt(d.value/10); })
+   .on('mouseover', function (d) {
+      links.style('stroke', null);
+      d3.select(this).style('opacity', .8).style('stroke', '#f5f4b5').attr("stroke-width", function(d) { return Math.sqrt(d.value/10); });
+      nodes.style('fill', function (node_d) {
+        return node_d === d.source || node_d === d.target ? "#ebcf6a" : "#0e1012";
+      });
+    })
+    .on('mouseout', function (d) {
+      links.style('stroke', null);
+      nodes.style('fill', null);
+    });
+
+   
+
+   //.attr("stroke", function(d, i) {return c10(i);})
+
+
+
+var nodes = svg.selectAll("nodes")
+   .data(data.nodes)
+   .enter()
+   .append("g");
+
+nodes.append("circle")
+	.attr("class", "node")
+   	.attr("cx", function(d) {
+     	return d.x
+  	 })
+   	.attr("cy", function(d) {
+     	return d.y
+   	})
+   	.attr("r", 10)
+	.style("stroke", "#1c1c1c")
+	.call(drag)
+   	.attr("fill", function(d) {
+     	return c10(d.group);
+   	});
+
+
+
+
+/*
+        .on('mouseover', function (d) {
+      nodes.style('fill', null);
+      d3.select(this).style("fill", "#f5f4b5");
+      var nodesToHighlight = data.links.map(function (e) { return e.source === d ? e.target : e.target === d ? e.source : 0})
+        .filter(function (d) { return d; });
+      nodes.filter(function (d) { return nodesToHighlight.indexOf(d) >= 0; })
+        .style('fill', '#555');
+      links.style('stroke', function (link_d) {
+        return link_d.source === d | link_d.target === d ? '#d62333' : '#f5f4b5';
+      });
+    })
+    .on('mouseout', function (d) {
+      nodes.style('fill', null);
+      links.style('stroke', null);
+    });    */
+
+
+//.call(drag);
+//.attr("fill", function(d, i) {return c10(i);
+
+var labels = nodes.append("text").text(function(d){
+                    return d.nodeName;
+                })
+                .attr("x", function (d) {
+                    return d.x-30;
+                })
+                .attr("y", function (d) {
+                    return d.y+10;
+                })
+		.style("font-size", "11px")
+		.style("font-weight", 550);
+
+
+		//.attr("fill", function(d, i) {return colors(i); });
+
+
+/*
+var labels = nodes.append("text")
+  .text(function(d) { return d.nodeName; });
+nodes.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.nodeName });
+*/ 
+
+
+
+/*
+var highlight = nodes
+      .on('mouseover', function (d) {
+        // Highlight the nodes: every node is green except of him
+        nodes.style('fill', "#121111")
+        d3.select(this).style('fill', '#333')
+        // Highlight the connections
+        links
+          .style('stroke', function (link_d) { return link_d.source === d.id || link_d.target === d.id ? '#333' : "#5b7485";})
+          .style('stroke-width', function (link_d) { return link_d.source === d.id || link_d.target === d.id ? 4 : 1;})
+      })
+      .on('mouseout', function (d) {
+        nodes.style('fill', "#333")
+        links
+           .attr("stroke", "#5b7485")
+           .attr("stroke-width", function(d) { return Math.sqrt(d.value/10); })
+      })
+
+*/
+
+
+
+var setEvents = labels
+          .on( 'mouseenter', function() {
+            d3.select( this )
+              .transition()
+              .attr("x", function(d) { return d.x;})
+              .attr("y", function(d) { return d.y;})
+              .attr("height", 70)
+              .attr("width", 50);})
+          .on( 'mouseleave', function() {
+            d3.select( this )
+              .transition()
+              .attr("x", function(d) { return d.x;})
+              .attr("y", function(d) { return d.y;})
+              .attr("height", 15)
+              .attr("width", 15);
+          });
+
+
+
+
+</script>
+</body>
+
+</html>
+
